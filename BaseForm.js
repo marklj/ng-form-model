@@ -46,8 +46,7 @@ class BaseForm {
         }
         if (
           constraint === 'min' &&
-          (!form[fieldName] &&
-            form[fieldName].length < fields[fieldName]['min'])
+          (form[fieldName] && form[fieldName].length < fields[fieldName]['min'])
         ) {
           this._errors.push(
             new ErrorMessage(
@@ -60,8 +59,7 @@ class BaseForm {
         }
         if (
           constraint === 'max' &&
-          (!form[fieldName] &&
-            form[fieldName].length < fields[fieldName]['max'])
+          (form[fieldName] && form[fieldName].length > fields[fieldName]['max'])
         ) {
           this._errors.push(
             new ErrorMessage(
@@ -72,16 +70,17 @@ class BaseForm {
             ),
           );
         }
-        if (
-          constraint === 'pattern' &&
-          fields[fieldName]['pattern'].exec(form[fieldName]) === null
-        ) {
-          this._errors.push(
-            new ErrorMessage(
-              `${this.getLabel(fieldName)} is not in a valid format.`,
-              fieldName,
-            ),
-          );
+
+        if (constraint === 'pattern') {
+          var regex = new RegExp(fields[fieldName]['pattern'], 'i'); // case insensitive
+          if (regex.exec(form[fieldName]) === null) {
+            this._errors.push(
+              new ErrorMessage(
+                `${this.getLabel(fieldName)} is not in a valid format.`,
+                fieldName,
+              ),
+            );
+          }
         }
       });
     });
@@ -96,11 +95,11 @@ class BaseForm {
       // convert to title string
       return (
         fieldName
-        .replace(/([A-Z])/g, ' $1')
-        // uppercase the first character
-        .replace(/^./, function (str) {
-          return str.toUpperCase();
-        })
+          .replace(/([A-Z])/g, ' $1')
+          // uppercase the first character
+          .replace(/^./, function(str) {
+            return str.toUpperCase();
+          })
       );
     }
   }

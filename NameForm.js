@@ -4,7 +4,8 @@ class NameForm extends BaseForm {
       firstName: {
         required: true,
         min: 2,
-        pattern: /a/, // requires 'a' char
+        max: 10,
+        pattern: 'a', // requires 'a' char
       },
       lastName: {
         label: 'Surname',

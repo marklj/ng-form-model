@@ -51,8 +51,22 @@ class BaseForm {
         ) {
           this._errors.push(
             new ErrorMessage(
-              `${this.getLabel(fieldName)} must be greater than ${
+              `${this.getLabel(fieldName)} must be at least ${
                 fields[fieldName]['min']
+              } characters in length.`,
+              fieldName,
+            ),
+          );
+        }
+        if (
+          constraint === 'max' &&
+          (!form[fieldName] &&
+            form[fieldName].length < fields[fieldName]['max'])
+        ) {
+          this._errors.push(
+            new ErrorMessage(
+              `${this.getLabel(fieldName)} must be no greater than ${
+                fields[fieldName]['max']
               } characters in length.`,
               fieldName,
             ),
@@ -82,11 +96,11 @@ class BaseForm {
       // convert to title string
       return (
         fieldName
-          .replace(/([A-Z])/g, ' $1')
-          // uppercase the first character
-          .replace(/^./, function(str) {
-            return str.toUpperCase();
-          })
+        .replace(/([A-Z])/g, ' $1')
+        // uppercase the first character
+        .replace(/^./, function (str) {
+          return str.toUpperCase();
+        })
       );
     }
   }
